@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".Common.RegistrationActivity">
+
+    <EditText
+        android:id="@+id/email_edt"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:background="@drawable/editext_background"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageView5"
+        app:layout_constraintStart_toStartOf="@+id/imageView5"
+        app:layout_constraintTop_toBottomOf="@+id/imageView5"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/password_edt"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:background="@drawable/editext_background"
+        android:hint="Password"
+        android:paddingLeft="20dp"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/email_edt"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/email_edt"
+        app:layout_constraintTop_toBottomOf="@+id/name_edt" />
+
+    <Button
+        android:id="@+id/reg_btn"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:text="Register"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/login_btn_background"
+        app:layout_constraintEnd_toEndOf="@+id/password_edt"
+        app:layout_constraintStart_toStartOf="@+id/password_edt"
+        app:layout_constraintTop_toBottomOf="@+id/password_edt" />
+
+    <TextView
+        android:id="@+id/back_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:text="Back to Login"
+        android:textSize="22sp"
+        android:onClick="ToLogin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/add_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="AddData"
+        android:text="Add Data"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/name_edt"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:background="@drawable/editext_background"
+        android:inputType="textPersonName"
+        android:hint="Name"
+        android:paddingLeft="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/email_edt"
+        app:layout_constraintStart_toStartOf="@+id/email_edt"
+        app:layout_constraintTop_toBottomOf="@+id/email_edt" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="50dp"
+        app:srcCompat="@drawable/logo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

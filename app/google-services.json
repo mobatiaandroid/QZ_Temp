@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "198488271044",
+    "firebase_url": "https://isgqz-fdd98.firebaseio.com",
+    "project_id": "isgqz-fdd98",
+    "storage_bucket": "isgqz-fdd98.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198488271044:android:15c3ad2fe89eb1b7e30191",
+        "android_client_info": {
+          "package_name": "com.isg.quiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198488271044-v6r7vpsmv23qsaa4g1kc4nea742u9gau.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.isg.quiz",
+            "certificate_hash": "8bfec27b57da079c9bc1058a43495c12b7cf5068"
+          }
+        },
+        {
+          "client_id": "198488271044-sdc2o00fln2ndd3dmf93t8aem2lgivgt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoOOc1IO9ONgWJ9diXPl9rYwOAJltXZec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198488271044-sdc2o00fln2ndd3dmf93t8aem2lgivgt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "198488271044-gbj0h65gq4eg5vd5k6i8lh6ad0qa848r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alghubraClient.qz"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198488271044:android:182ae8f2f8733c5fe30191",
+        "android_client_info": {
+          "package_name": "com.mobatia.isg.quiz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198488271044-7168tu9aitv9g1m7o3kt6od3guv26jjp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobatia.isg.quiz",
+            "certificate_hash": "50f7e549df9a21911284c9d04093d77ba377a0df"
+          }
+        },
+        {
+          "client_id": "198488271044-sdc2o00fln2ndd3dmf93t8aem2lgivgt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoOOc1IO9ONgWJ9diXPl9rYwOAJltXZec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198488271044-sdc2o00fln2ndd3dmf93t8aem2lgivgt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "198488271044-gbj0h65gq4eg5vd5k6i8lh6ad0qa848r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alghubraClient.qz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
