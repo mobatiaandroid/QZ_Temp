@@ -800,6 +800,8 @@ Questions extends AppCompatActivity {
                         });
                         preparedmediaplayer_audio(questionCount);*/
                         Log.e("PlayAudio",mediaplayer.toString());
+                        Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                        startService(svc);
                     } else {
                         explanation_ques_image.setVisibility(View.GONE);
                         Explanationques.setVisibility(View.VISIBLE);
