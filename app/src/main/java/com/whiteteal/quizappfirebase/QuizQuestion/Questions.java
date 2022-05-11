@@ -621,12 +621,15 @@ Questions extends AppCompatActivity {
                     stopService(svc);
                   try {
                       if (media_player.isPlaying()) {
-
+//                          Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                          startService(svc);
                           handler1.removeCallbacks(updater);
                           media_player.pause();
                           playbutton.setImageResource(R.drawable.play_button);
                        } else {
                            Toast.makeText(mContext, "failed", Toast.LENGTH_SHORT).show();
+//                          Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                          stopService(svc);
                            media_player.start();
                             playbutton.setImageResource(R.drawable.pause_button);
                             updateseekbar();
@@ -735,8 +738,12 @@ Questions extends AppCompatActivity {
                         if (mediaplayer.isPlaying()) {
                             handler2.removeCallbacks(updater_audio);
                             mediaplayer.pause();
+                            Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                            startService(svc);
                             playbutton_audio.setImageResource(R.drawable.play_button);
                         } else {
+                            Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                            stopService(svc);
                             mediaplayer.start();
                             playbutton_audio.setImageResource(R.drawable.pause_button);
                             updateseekbar_audio();
@@ -771,6 +778,8 @@ Questions extends AppCompatActivity {
                         linearlayout_audio.setVisibility(View.VISIBLE);
                         Explanationques.setVisibility(View.GONE);
                         explanation_ques_image.setVisibility(View.GONE);
+//                        Intent svc = new Intent(mContext, BackgroundSoundService.class);
+//                        stopService(svc);
                         Log.e("PlayAud",media_player.toString());
 
                         /*playbutton_audio.setOnClickListener(new View.OnClickListener() {
