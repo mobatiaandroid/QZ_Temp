@@ -597,6 +597,8 @@ Questions extends AppCompatActivity {
                 /*Question.setText(questionArray.get(questionCount).getQuestion());*/
                 Integer question_type = Integer.valueOf(questionArray.get(questionCount).getQuestionType());
                 if (question_type.equals(2)) {
+                    Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                    startService(svc);
                     Question_Image.setVisibility(View.VISIBLE);
                     Question.setVisibility(View.GONE);
                     linearlayout.setVisibility(View.GONE);
@@ -618,7 +620,6 @@ Questions extends AppCompatActivity {
                     } catch (Exception e) {
                     }
                     Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                    stopService(svc);
                   try {
                       if (media_player.isPlaying()) {
 //                          Intent svc = new Intent(mContext, BackgroundSoundService.class);
@@ -651,6 +652,8 @@ Questions extends AppCompatActivity {
                 }
 
                 else {
+                    Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                    startService(svc);
                     Question_Image.setVisibility(View.GONE);
                     Question.setVisibility(View.VISIBLE);
                     Question.setText(questionArray.get(questionCount).getQuestion());
