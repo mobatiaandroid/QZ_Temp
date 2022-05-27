@@ -428,70 +428,196 @@ Questions extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            for (int i = 0; i < questionArray.size(); i++) {
-                                Log.d("ResponseValue: SIZE", String.valueOf(questionArray.size()));
-                                Log.e("ResponseValue", String.valueOf(questionArray.size()));
-                                QuestionSize = questionArray.size();
-                                System.out.println("Question_array_size" + QuestionSize);
-                                Log.e("Question_count", String.valueOf((questionArray.get(questionCount))));
-                                Question.setText(questionArray.get(questionCount).getQuestion());
-                                    /*Glide.with(mContext)
-                                            .load(questionArray.get(questionCount).getQuestion())
-                                            .into(Question_Image);*/
+                            QuestionSize = questionArray.size();
+                            if (QuestionSize == questionCount) {
+                                CancelTimer();
+                            } else {
+                                System.out.println("Success");
+                                for (int i = 0; i < questionArray.size(); i++) {
+                                    Log.d("ResponseValue: SIZE", String.valueOf(questionArray.size()));
 
-                                /* Question.setText(questionArray.get(questionCount).getQuestion());*/
+                                    Integer question_type = Integer.valueOf(questionArray.get(questionCount).getQuestionType());
+                                    if (question_type.equals(2)) {
+                                        Question_Image.setVisibility(View.VISIBLE);
+                                        Question.setVisibility(View.VISIBLE);
+                                        Question.setText(questionArray.get(questionCount).getQuestion());
+                                        linearlayout.setVisibility(View.GONE);
+                                        Glide.with(mContext)
+                                                .load(questionArray.get(questionCount).getQuestion())
+                                                .into(Question_Image);
+                                    } else if (question_type.equals(3)) {
 
-                                System.out.println("Countt: " + questionArray.get(questionCount).getOptions().size());
-                                SIZE = questionArray.get(questionCount).getOptions().size();
+                                        linearlayout.setVisibility(View.VISIBLE);
+                                        Question.setVisibility(View.VISIBLE);
+                                        Question.setText(questionArray.get(questionCount).getQuestion());
+                                        Question_Image.setVisibility(View.GONE);
+
+                                        Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                                        if (media_player.isPlaying()) {
+                                            startService(svc);
+                                            handler1.removeCallbacks(updater);
+                                            media_player.pause();
+                                            playbutton.setImageResource(R.drawable.play);
+                                        } else {
+                                            stopService(svc);
+                                            media_player.start();
+                                            playbutton.setImageResource(R.drawable.pause_button);
+                                            updateseekbar();
+                                        }
+                                        preparedmediaplayer(questionCount);
+
+                                    } else {
+                                        Question_Image.setVisibility(View.GONE);
+                                        Question.setVisibility(View.VISIBLE);
+                                        Question.setText(questionArray.get(questionCount).getQuestion());
+                                    }
+
+                                    System.out.println("Countt: " + questionArray.get(questionCount).getOptions().size());
+                                    SIZE = questionArray.get(questionCount).getOptions().size();
 
 //                                for (int a = 0;a<questionArray.size();a++){
 
-                                if (SIZE == 3) {
-                                    System.out.println("Countt: this is what working");
-                                    OP_1.setText(questionArray.get(questionCount).getOptions().get(0));
-                                    OP_2.setText(questionArray.get(questionCount).getOptions().get(1));
-                                    OP_3.setText(questionArray.get(questionCount).getOptions().get(2));
-                                    OP_4.setVisibility(View.GONE);
+                                    if (SIZE == 3) {
+                                        System.out.println("Countt: this is what working");
+                                        OP_1.setText(questionArray.get(questionCount).getOptions().get(0));
+                                        OP_2.setText(questionArray.get(questionCount).getOptions().get(1));
+                                        OP_3.setText(questionArray.get(questionCount).getOptions().get(2));
+                                        OP_4.setVisibility(View.GONE);
 
-                                    ExplanationText = questionArray.get(questionCount).getExplanation();
+                                        if (question_type.equals(2)) {
 
-                                    Explanationques.setText(questionArray.get(questionCount).getQuestion());
-                                    ProgressAns1.setText(questionArray.get(questionCount).getOptions().get(0));
-                                    ProgressAns2.setText(questionArray.get(questionCount).getOptions().get(1));
-                                    ProgressAns3.setText(questionArray.get(questionCount).getOptions().get(2));
-                                    R4.setVisibility(View.GONE);
-                                } else if (SIZE == 2) {
-                                    OP_1.setText(questionArray.get(questionCount).getOptions().get(0));
-                                    OP_2.setText(questionArray.get(questionCount).getOptions().get(1));
-                                    OP_3.setVisibility(View.GONE);
-                                    OP_4.setVisibility(View.GONE);
+                                            explanation_ques_image.setVisibility(View.VISIBLE);
+                                            linearlayout_audio.setVisibility(View.GONE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            Glide.with(mContext)
+                                                    .load(questionArray.get(questionCount).getQuestion())
+                                                    .into(explanation_ques_image);
+                                        } else if (question_type.equals(3)) {
 
-                                    ExplanationText = questionArray.get(questionCount).getExplanation();
+                                            linearlayout_audio.setVisibility(View.VISIBLE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            explanation_ques_image.setVisibility(View.GONE);
+                                            if (mediaplayer.isPlaying()) {
+                                                handler2.removeCallbacks(updater_audio);
+                                                mediaplayer.pause();
+                                                playbutton_audio.setImageResource(R.drawable.play);
+                                            } else {
+                                                mediaplayer.start();
+                                                playbutton_audio.setImageResource(R.drawable.pause_button);
+                                                updateseekbar_audio();
+                                            }
+                                            preparedmediaplayer_audio(questionCount);
 
-                                    Explanationques.setText(questionArray.get(questionCount).getQuestion());
-                                    ProgressAns1.setText(questionArray.get(questionCount).getOptions().get(0));
-                                    ProgressAns2.setText(questionArray.get(questionCount).getOptions().get(1));
-                                    R3.setVisibility(View.GONE);
-                                    R4.setVisibility(View.GONE);
-                                } else {
-                                    System.out.println("Countt: this also is what working");
-                                    OP_1.setText(questionArray.get(questionCount).getOptions().get(0));
-                                    OP_2.setText(questionArray.get(questionCount).getOptions().get(1));
-                                    OP_3.setText(questionArray.get(questionCount).getOptions().get(2));
-                                    OP_4.setText(questionArray.get(questionCount).getOptions().get(3));
+                                        } else {
+                                            explanation_ques_image.setVisibility(View.GONE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
 
-                                    ExplanationText = questionArray.get(questionCount).getExplanation();
+                                        }
+                                        ExplanationText = questionArray.get(questionCount).getExplanation();
 
-                                    Explanationques.setText(questionArray.get(questionCount).getQuestion());
-                                    ProgressAns1.setText(questionArray.get(questionCount).getOptions().get(0));
-                                    ProgressAns2.setText(questionArray.get(questionCount).getOptions().get(1));
-                                    ProgressAns3.setText(questionArray.get(questionCount).getOptions().get(2));
-                                    ProgressAns4.setText(questionArray.get(questionCount).getOptions().get(3));
-                                }
+
+                                        ProgressAns1.setText(questionArray.get(questionCount).getOptions().get(0));
+                                        ProgressAns2.setText(questionArray.get(questionCount).getOptions().get(1));
+                                        ProgressAns3.setText(questionArray.get(questionCount).getOptions().get(2));
+                                        R4.setVisibility(View.GONE);
+                                    } else if (SIZE == 2) {
+                                        OP_1.setText(questionArray.get(questionCount).getOptions().get(0));
+                                        OP_2.setText(questionArray.get(questionCount).getOptions().get(1));
+                                        OP_3.setVisibility(View.GONE);
+                                        OP_4.setVisibility(View.GONE);
+
+                                        if (question_type.equals(2)) {
+                                            explanation_ques_image.setVisibility(View.VISIBLE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            linearlayout_audio.setVisibility(View.GONE);
+                                            Glide.with(mContext)
+                                                    .load(questionArray.get(questionCount).getQuestion())
+                                                    .into(explanation_ques_image);
+                                        } else if (question_type.equals(3)) {
+
+                                            linearlayout_audio.setVisibility(View.VISIBLE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            explanation_ques_image.setVisibility(View.GONE);
+                                            if (mediaplayer.isPlaying()) {
+                                                handler2.removeCallbacks(updater_audio);
+                                                mediaplayer.pause();
+                                                playbutton_audio.setImageResource(R.drawable.play);
+                                            } else {
+                                                mediaplayer.start();
+                                                playbutton_audio.setImageResource(R.drawable.pause_button);
+                                                updateseekbar_audio();
+                                            }
+                                            preparedmediaplayer_audio(questionCount);
+
+                                        } else {
+                                            explanation_ques_image.setVisibility(View.GONE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+
+                                        }
+
+                                        ExplanationText = questionArray.get(questionCount).getExplanation();
+
+
+                                        ProgressAns1.setText(questionArray.get(questionCount).getOptions().get(0));
+                                        ProgressAns2.setText(questionArray.get(questionCount).getOptions().get(1));
+                                        R3.setVisibility(View.GONE);
+                                        R4.setVisibility(View.GONE);
+                                    } else {
+                                        System.out.println("Countt: this also is what working");
+                                        OP_1.setText(questionArray.get(questionCount).getOptions().get(0));
+                                        OP_2.setText(questionArray.get(questionCount).getOptions().get(1));
+                                        OP_3.setText(questionArray.get(questionCount).getOptions().get(2));
+                                        OP_4.setText(questionArray.get(questionCount).getOptions().get(3));
+
+                                        if (question_type.equals(2)) {
+                                            explanation_ques_image.setVisibility(View.VISIBLE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            linearlayout_audio.setVisibility(View.GONE);
+                                            Glide.with(mContext)
+                                                    .load(questionArray.get(questionCount).getQuestion())
+                                                    .into(explanation_ques_image);
+                                        } else if (question_type.equals(3)) {
+
+                                            linearlayout_audio.setVisibility(View.VISIBLE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            explanation_ques_image.setVisibility(View.GONE);
+                                            if (mediaplayer.isPlaying()) {
+                                                handler2.removeCallbacks(updater_audio);
+                                                mediaplayer.pause();
+                                                playbutton_audio.setImageResource(R.drawable.play);
+                                            } else {
+                                                mediaplayer.start();
+                                                playbutton_audio.setImageResource(R.drawable.pause_button);
+                                                updateseekbar_audio();
+                                            }
+                                            preparedmediaplayer_audio(questionCount);
+
+                                        } else {
+                                            explanation_ques_image.setVisibility(View.GONE);
+                                            Explanationques.setVisibility(View.VISIBLE);
+                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+
+                                        }
+                                        ExplanationText = questionArray.get(questionCount).getExplanation();
+
+                                        ProgressAns1.setText(questionArray.get(questionCount).getOptions().get(0));
+                                        ProgressAns2.setText(questionArray.get(questionCount).getOptions().get(1));
+                                        ProgressAns3.setText(questionArray.get(questionCount).getOptions().get(2));
+                                        ProgressAns4.setText(questionArray.get(questionCount).getOptions().get(3));
+                                    }
 //                                }
-                            }
-                            QuesList.add(Question.getText().toString());
+                                }
+                                QuesList.add(Question.getText().toString());
 
+                            }
                         }
                     });
 
@@ -678,34 +804,29 @@ Questions extends AppCompatActivity {
                                 .into(explanation_ques_image);
                     } else if (question_type.equals(3)) {
                         linearlayout_audio.setVisibility(View.VISIBLE);
-                        Explanationques.setVisibility(View.GONE);
+                        Explanationques.setVisibility(View.VISIBLE);
+                        Explanationques.setText(questionArray.get(questionCount).getQuestion());
                         explanation_ques_image.setVisibility(View.GONE);
-                        /*try {
-                            if (mediaPlayer != null)
-                            {
-                                mediaPlayer.stop();
-                                if (mediaplayer.isPlaying()) {
-                                    handler2.removeCallbacks(updater_audio);
-                                    mediaplayer.pause();
-                                    playbutton_audio.setImageResource(R.drawable.play_button);
-                                } else {
-                                    mediaplayer.start();
-                                    playbutton_audio.setImageResource(R.drawable.pause_button);
-                                    updateseekbar_audio();
-                                }
-                                preparedmediaplayer_audio(questionCount);
-                                mediaPlayer.start();
+
+
+                        try {
+                            if (mediaplayer.isPlaying()) {
+                                handler2.removeCallbacks(updater_audio);
+                                mediaplayer.pause();
+                                playbutton_audio.setImageResource(R.drawable.play);
+                            } else {
+                                mediaplayer.start();
+                                playbutton_audio.setImageResource(R.drawable.pause_button);
+                                updateseekbar_audio();
                             }
-                             else
+                            preparedmediaplayer_audio(questionCount);
+
+                        }
+                        catch (Exception e)
                         {
 
                         }
-                        } catch (Exception e)
-                        {
 
-                        }
-                        Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                        stopService(svc);*/
 
                     }
 
@@ -735,18 +856,15 @@ Questions extends AppCompatActivity {
                                 .into(explanation_ques_image);
                     } else if (question_type.equals(3)) {
                         linearlayout_audio.setVisibility(View.VISIBLE);
-                        Explanationques.setVisibility(View.GONE);
+                        Explanationques.setVisibility(View.VISIBLE);
+                        Explanationques.setText(questionArray.get(questionCount).getQuestion());
                         explanation_ques_image.setVisibility(View.GONE);
 
                         if (mediaplayer.isPlaying()) {
                             handler2.removeCallbacks(updater_audio);
                             mediaplayer.pause();
-                            Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                            startService(svc);
-                            playbutton_audio.setImageResource(R.drawable.play_button);
+                            playbutton_audio.setImageResource(R.drawable.play);
                         } else {
-                            Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                            stopService(svc);
                             mediaplayer.start();
                             playbutton_audio.setImageResource(R.drawable.pause_button);
                             updateseekbar_audio();
@@ -779,41 +897,20 @@ Questions extends AppCompatActivity {
                                 .into(explanation_ques_image);
                     } else if (question_type.equals(3)) {
                         linearlayout_audio.setVisibility(View.VISIBLE);
-                        Explanationques.setVisibility(View.GONE);
+                        Explanationques.setVisibility(View.VISIBLE);
+                        Explanationques.setText(questionArray.get(questionCount).getQuestion());
                         explanation_ques_image.setVisibility(View.GONE);
-//                        Intent svc = new Intent(mContext, BackgroundSoundService.class);
-//                        stopService(svc);
-                        Log.e("PlayAud",media_player.toString());
 
-                        /*playbutton_audio.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-
-
-                                    if (mediaplayer!=null) {
-                                        mediaplayer.pause();
-                                        playbutton_audio.setImageResource(R.drawable.pause_button);
-                                        mediaPlayer = MediaPlayer.create(mContext, R.raw.countdown_isg);
-                                        mediaPlayer.start();
-                                    } else {
-                                        mediaplayer.start();
-                                        playbutton_audio.setImageResource(R.drawable.pause_button);
-                                        updateseekbar_audio();
-                                    }
-
-                                }
-                                catch (Exception e)
-                                {
-
-                                }
-
-                            }
-                        });
-                        preparedmediaplayer_audio(questionCount);*/
-                        Log.e("PlayAudio",mediaplayer.toString());
-                        Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                        startService(svc);
+                        if (mediaplayer.isPlaying()) {
+                            handler2.removeCallbacks(updater_audio);
+                            mediaplayer.pause();
+                            playbutton_audio.setImageResource(R.drawable.play);
+                        } else {
+                            mediaplayer.start();
+                            playbutton_audio.setImageResource(R.drawable.pause_button);
+                            updateseekbar_audio();
+                        }
+                        preparedmediaplayer_audio(questionCount);
                     } else {
                         explanation_ques_image.setVisibility(View.GONE);
                         Explanationques.setVisibility(View.VISIBLE);
@@ -2034,21 +2131,20 @@ Questions extends AppCompatActivity {
             media_player.reset();
             media_player.setDataSource(questionArray.get(questionCount).getQuestion());
             Log.e("audioplay", questionArray.get(questionCount).getQuestion());
+
             media_player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.start();
                 }
+
             });
             media_player.prepare();
-            duration_time.setText(milliseconds(media_player.getDuration()));
-
-
+            duration_time.setText("/"+milliseconds(media_player.getDuration()));
         } catch (Exception exception) {
             Toast.makeText(this, "failed for load" + exception.getMessage(), Toast.LENGTH_SHORT).show();
             System.out.println("failed for load" + exception.getMessage());
         }
-        mediaPlayer.start();
 
     }
 
@@ -2061,8 +2157,7 @@ Questions extends AppCompatActivity {
             Log.e("audioplay1", questionArray.get(questionCount).getQuestion());
             mediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
+                public void onPrepared(MediaPlayer mp) { mp.start();
                 }
             });
             mediaplayer.prepare();
@@ -2072,6 +2167,7 @@ Questions extends AppCompatActivity {
             Toast.makeText(this, "Exception" + exception.getMessage(), Toast.LENGTH_SHORT).show();
             System.out.println("Exception" + exception.getMessage());
         }
+
     }
 
     private Runnable updater = new Runnable() {
@@ -2111,18 +2207,7 @@ Questions extends AppCompatActivity {
         }
     }
 
-    /*private void playmusic(int questionCount) {
-        if (mediaplayer.isPlaying()) {
-            handler1.removeCallbacks(updater);
-            mediaplayer.pause();
-            playbutton_audio.setImageResource(R.drawable.play);
-        } else {
-            mediaplayer.start();
-            playbutton_audio.setImageResource(R.drawable.pause_button);
-            updateseekbar();
-        }
-        preparedmediaplayer(questionCount);
-    }*/
+
 
     private String milliseconds(long milliscnd) {
         String timer = "";
@@ -2142,14 +2227,7 @@ Questions extends AppCompatActivity {
         return timer;
     }
 
-    private void stopPlayer() {
-        //Stop the question audio
-        mediaPlayer.stop();
-        mediaPlayer.release();
-        //Resume the Background Audio
-        Intent svc = new Intent(mContext, BackgroundSoundService.class);
-        startService(svc);
-    }
+
 
     /*private void startPlayer(int questionCount)
     {

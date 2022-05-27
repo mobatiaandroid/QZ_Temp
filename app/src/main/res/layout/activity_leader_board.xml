@@ -103,64 +103,65 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/total_star_view"
+    <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total Stars"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imagicon"
+        android:layout_marginTop="5sp"
         app:layout_constraintStart_toStartOf="@+id/LeaderName"
-        app:layout_constraintTop_toBottomOf="@+id/LeaderName"/>
-    <TextView
-        android:id="@+id/total_score_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Total Scores"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:layout_marginLeft="100dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imagicon"
-        app:layout_constraintStart_toStartOf="@+id/LeaderName"
-        app:layout_constraintTop_toBottomOf="@+id/LeaderName"/>
+        app:layout_constraintTop_toBottomOf="@+id/LeaderName">
 
-    <TextView
-        android:id="@+id/total_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="45sp"
-        android:gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="40dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imagicon"
-        app:layout_constraintStart_toStartOf="@+id/total_star_view"
-        app:layout_constraintTop_toBottomOf="@+id/total_star_view" />
+        <TextView
+            android:id="@+id/total_score_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Score"
+            android:textSize="13sp"
+            android:layout_toRightOf="@+id/total_score"
+            android:layout_toEndOf="@id/total_score"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/total_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:layout_marginLeft="23dp"
+            android:text="1"
+            android:textStyle="bold" />
+        <!--<TextView
+            android:id="@+id/total_star_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Star"
+            android:layout_marginTop="3dp"
+            android:textSize="13sp"
+            android:layout_below="@id/total_score"
+            android:textColor="@color/white"
+            android:textStyle="bold" />-->
 
-    <ImageView
-        android:id="@+id/imageView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/total_start"
-        app:layout_constraintTop_toTopOf="@+id/total_start"
-        app:srcCompat="@drawable/star" />
+        <TextView
+            android:id="@+id/total_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/white"
+            android:layout_marginLeft="23dp"
+            android:textSize="30sp"
+            android:layout_below="@+id/total_score"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:visibility="gone"
+            android:layout_below="@+id/total_score"
+            android:layout_toEndOf="@id/total_start"
+            app:srcCompat="@drawable/star" />
 
-    <TextView
-        android:id="@+id/total_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="45sp"
-        android:textStyle="bold"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imagicon"
-        app:layout_constraintStart_toStartOf="@+id/total_score_view"
-        app:layout_constraintTop_toBottomOf="@+id/total_score_view" />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/LeaderBoard_Recycler"
@@ -186,7 +187,7 @@
         app:layout_constraintEnd_toEndOf="@+id/LeaderBoard_Recycler"
         app:layout_constraintHorizontal_bias="0.519"
         app:layout_constraintStart_toStartOf="@+id/LeaderBoard_Recycler"
-        app:layout_constraintTop_toBottomOf="@+id/total_start" />
+        app:layout_constraintTop_toBottomOf="@+id/relative_layout" />
 
     <TextView
         android:id="@+id/BuildVersion"
