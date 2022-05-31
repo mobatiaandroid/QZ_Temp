@@ -7,8 +7,16 @@ public class QuestionsModel {
     String Answer;
     String Explanation;
     Integer QuestionType;
+    String media_question;
     ArrayList<String> options = new ArrayList<>();
 
+    public String getMedia_question() {
+        return media_question;
+    }
+
+    public void setMedia_question(String media_question) {
+        this.media_question = media_question;
+    }
 
     public String getQuestion() {
         return Question;

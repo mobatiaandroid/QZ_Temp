@@ -86,7 +86,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private LeadersAdapter mAdapter;
-    TextView Name,TotalStar,Version,TotalScore;
+    TextView Name,TotalStar,Version,TotalScore,scorecount,starCount;
     Context mContext;
     WP7ProgressBar loader,alertloader;
     String totalStar,total_marks,total_score;
@@ -107,6 +107,8 @@ public class LeaderBoardActivity extends AppCompatActivity {
         android_id = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         DeviceName = Build.BRAND;
         Name = findViewById(R.id.LeaderName);
+        scorecount=findViewById(R.id.scorecount);
+        starCount=findViewById(R.id.starCount);
         TotalStar = findViewById(R.id.total_start);
         TotalScore=findViewById(R.id.total_score);
         loader = findViewById(R.id.LeaderLoader);
@@ -238,6 +240,8 @@ public class LeaderBoardActivity extends AppCompatActivity {
                                         {
                                             TotalStar.setText(AppPreferenceManager.getStudentStar(mContext));
                                             TotalScore.setText(AppPreferenceManager.getTotalScore(mContext));
+                                            starCount.setText(AppPreferenceManager.getStudentStar(mContext));
+                                            scorecount.setText(AppPreferenceManager.getTotalScore(mContext));
                                             Name.setText(AppPreferenceManager.getStudentName(mContext));
                                             star.setVisibility(View.VISIBLE);
                                             Log.e("movielist", String.valueOf(movieList.size()));

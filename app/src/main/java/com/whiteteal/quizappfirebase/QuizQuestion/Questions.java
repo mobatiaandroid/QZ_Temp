@@ -417,6 +417,7 @@ Questions extends AppCompatActivity {
                         model.setAnswer(job.optString("answer_index"));
                         model.setExplanation(job.optString("explanation"));
                         model.setQuestionType(job.optInt("question_type"));
+                        model.setMedia_question(job.optString("media_question"));
                         final JSONArray array = job.getJSONArray("options");
                         for (int K = 0; K < array.length(); K++) {
                             OP.add(String.valueOf(array.get(K)));
@@ -437,10 +438,12 @@ Questions extends AppCompatActivity {
                                     Log.d("ResponseValue: SIZE", String.valueOf(questionArray.size()));
 
                                     Integer question_type = Integer.valueOf(questionArray.get(questionCount).getQuestionType());
+                                  /*  media_question=questionArray.get(questionCount).getMedia_question();*/
+                                    System.out.print("media_question"+questionArray.get(questionCount).getMedia_question());
                                     if (question_type.equals(2)) {
                                         Question_Image.setVisibility(View.VISIBLE);
                                         Question.setVisibility(View.VISIBLE);
-                                        Question.setText(questionArray.get(questionCount).getQuestion());
+                                        Question.setText(questionArray.get(questionCount).getMedia_question());
                                         linearlayout.setVisibility(View.GONE);
                                         Glide.with(mContext)
                                                 .load(questionArray.get(questionCount).getQuestion())
@@ -449,7 +452,7 @@ Questions extends AppCompatActivity {
 
                                         linearlayout.setVisibility(View.VISIBLE);
                                         Question.setVisibility(View.VISIBLE);
-                                        Question.setText(questionArray.get(questionCount).getQuestion());
+                                        Question.setText(questionArray.get(questionCount).getMedia_question());
                                         Question_Image.setVisibility(View.GONE);
 
                                         Intent svc = new Intent(mContext, BackgroundSoundService.class);
@@ -489,7 +492,7 @@ Questions extends AppCompatActivity {
                                             explanation_ques_image.setVisibility(View.VISIBLE);
                                             linearlayout_audio.setVisibility(View.GONE);
                                             Explanationques.setVisibility(View.VISIBLE);
-                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                                             Glide.with(mContext)
                                                     .load(questionArray.get(questionCount).getQuestion())
                                                     .into(explanation_ques_image);
@@ -497,7 +500,7 @@ Questions extends AppCompatActivity {
 
                                             linearlayout_audio.setVisibility(View.VISIBLE);
                                             Explanationques.setVisibility(View.VISIBLE);
-                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                                             explanation_ques_image.setVisibility(View.GONE);
                                             if (mediaplayer.isPlaying()) {
                                                 handler2.removeCallbacks(updater_audio);
@@ -532,7 +535,7 @@ Questions extends AppCompatActivity {
                                         if (question_type.equals(2)) {
                                             explanation_ques_image.setVisibility(View.VISIBLE);
                                             Explanationques.setVisibility(View.VISIBLE);
-                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                                             linearlayout_audio.setVisibility(View.GONE);
                                             Glide.with(mContext)
                                                     .load(questionArray.get(questionCount).getQuestion())
@@ -541,7 +544,7 @@ Questions extends AppCompatActivity {
 
                                             linearlayout_audio.setVisibility(View.VISIBLE);
                                             Explanationques.setVisibility(View.VISIBLE);
-                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                                             explanation_ques_image.setVisibility(View.GONE);
                                             if (mediaplayer.isPlaying()) {
                                                 handler2.removeCallbacks(updater_audio);
@@ -578,7 +581,7 @@ Questions extends AppCompatActivity {
                                         if (question_type.equals(2)) {
                                             explanation_ques_image.setVisibility(View.VISIBLE);
                                             Explanationques.setVisibility(View.VISIBLE);
-                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                                             linearlayout_audio.setVisibility(View.GONE);
                                             Glide.with(mContext)
                                                     .load(questionArray.get(questionCount).getQuestion())
@@ -587,7 +590,7 @@ Questions extends AppCompatActivity {
 
                                             linearlayout_audio.setVisibility(View.VISIBLE);
                                             Explanationques.setVisibility(View.VISIBLE);
-                                            Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                                            Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                                             explanation_ques_image.setVisibility(View.GONE);
                                             if (mediaplayer.isPlaying()) {
                                                 handler2.removeCallbacks(updater_audio);
@@ -718,73 +721,56 @@ Questions extends AppCompatActivity {
         if (QuestionSize == questionCount) {
             CancelTimer();
         } else {
+
             for (int i = 0; i < questionArray.size(); i++) {
                 System.out.println("ARSHAD: " + questionArray.get(questionCount).getQuestion());
-                /*Question.setText(questionArray.get(questionCount).getQuestion());*/
                 Integer question_type = Integer.valueOf(questionArray.get(questionCount).getQuestionType());
+                System.out.println("question_type" + question_type);
                 if (question_type.equals(2)) {
                     Intent svc = new Intent(mContext, BackgroundSoundService.class);
                     startService(svc);
                     Question_Image.setVisibility(View.VISIBLE);
-                    Question.setVisibility(View.GONE);
+                    Question.setVisibility(View.VISIBLE);
+                    Question.setText(questionArray.get(questionCount).getMedia_question());
                     linearlayout.setVisibility(View.GONE);
                     Glide.with(mContext)
                             .load(questionArray.get(questionCount).getQuestion())
                             .into(Question_Image);
                 } else if (question_type.equals(3)) {
 
-                        linearlayout.setVisibility(View.VISIBLE);
-                        Question.setVisibility(View.GONE);
-                        Question_Image.setVisibility(View.GONE);
-                    try {
-                        if (mediaPlayer != null)
-                        {
-                            mediaPlayer.pause();
+                    linearlayout.setVisibility(View.VISIBLE);
+                    Question.setVisibility(View.VISIBLE);
+                    Question.setText(questionArray.get(questionCount).getMedia_question());
+                    Question_Image.setVisibility(View.GONE);
 
-                        }
-
-                    } catch (Exception e) {
-                    }
                     Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                  try {
-                      if (media_player.isPlaying()) {
-//                          Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                          startService(svc);
-                          handler1.removeCallbacks(updater);
-                          media_player.pause();
-                          playbutton.setImageResource(R.drawable.play_button);
-                       } else {
-                           Toast.makeText(mContext, "failed", Toast.LENGTH_SHORT).show();
-//                          Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                          stopService(svc);
-                           media_player.start();
+
+                    try {
+                        if (media_player.isPlaying()) {
+                            startService(svc);
+                            handler1.removeCallbacks(updater);
+                            media_player.pause();
+                            playbutton.setImageResource(R.drawable.play);
+                        } else {
+                            stopService(svc);
+                            media_player.start();
                             playbutton.setImageResource(R.drawable.pause_button);
                             updateseekbar();
-                       }
-                       preparedmediaplayer(questionCount);
+                        }
+                        preparedmediaplayer(questionCount);
 
-                   }
-                    catch (Exception e)
-                   {
+                    } catch (Exception e) {
 
                     }
 
 
-                    /*mediaPlayer = MediaPlayer.create(mContext, R.raw.countdown_isg);
-                    mediaPlayer.start();*/
-
-
-
-                }
-
-                else {
+                } else {
                     Intent svc = new Intent(mContext, BackgroundSoundService.class);
                     startService(svc);
                     Question_Image.setVisibility(View.GONE);
                     Question.setVisibility(View.VISIBLE);
                     Question.setText(questionArray.get(questionCount).getQuestion());
                 }
-
                 System.out.println("Countt: " + questionArray.get(questionCount).getOptions().size());
                 SIZE = questionArray.get(questionCount).getOptions().size();
 //                for (int a = 0;a<questionArray.size();a++){
@@ -797,15 +783,17 @@ Questions extends AppCompatActivity {
                     OP_4.setVisibility(View.GONE);
                     if (question_type.equals(2)) {
                         explanation_ques_image.setVisibility(View.VISIBLE);
-                        Explanationques.setVisibility(View.GONE);
+                        Explanationques.setVisibility(View.VISIBLE);
+                        Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                         linearlayout_audio.setVisibility(View.GONE);
                         Glide.with(mContext)
                                 .load(questionArray.get(questionCount).getQuestion())
                                 .into(explanation_ques_image);
                     } else if (question_type.equals(3)) {
+
                         linearlayout_audio.setVisibility(View.VISIBLE);
                         Explanationques.setVisibility(View.VISIBLE);
-                        Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                        Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                         explanation_ques_image.setVisibility(View.GONE);
 
 
@@ -828,16 +816,16 @@ Questions extends AppCompatActivity {
                         }
 
 
-                    }
 
-
-                    else {
+                    } else {
                         explanation_ques_image.setVisibility(View.GONE);
                         Explanationques.setVisibility(View.VISIBLE);
                         Explanationques.setText(questionArray.get(questionCount).getQuestion());
 
                     }
                     ExplanationText = questionArray.get(questionCount).getExplanation();
+
+
                     ProgressAns1.setText(questionArray.get(questionCount).getOptions().get(0));
                     ProgressAns2.setText(questionArray.get(questionCount).getOptions().get(1));
                     ProgressAns3.setText(questionArray.get(questionCount).getOptions().get(2));
@@ -849,7 +837,8 @@ Questions extends AppCompatActivity {
                     OP_4.setVisibility(View.GONE);
                     if (question_type.equals(2)) {
                         explanation_ques_image.setVisibility(View.VISIBLE);
-                        Explanationques.setVisibility(View.GONE);
+                        Explanationques.setVisibility(View.VISIBLE);
+                        Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                         linearlayout_audio.setVisibility(View.GONE);
                         Glide.with(mContext)
                                 .load(questionArray.get(questionCount).getQuestion())
@@ -857,7 +846,7 @@ Questions extends AppCompatActivity {
                     } else if (question_type.equals(3)) {
                         linearlayout_audio.setVisibility(View.VISIBLE);
                         Explanationques.setVisibility(View.VISIBLE);
-                        Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                        Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                         explanation_ques_image.setVisibility(View.GONE);
 
                         if (mediaplayer.isPlaying()) {
@@ -875,7 +864,6 @@ Questions extends AppCompatActivity {
                         Explanationques.setVisibility(View.VISIBLE);
                         Explanationques.setText(questionArray.get(questionCount).getQuestion());
                     }
-
                     ExplanationText = questionArray.get(questionCount).getExplanation();
 
                     ProgressAns1.setText(questionArray.get(questionCount).getOptions().get(0));
@@ -890,7 +878,8 @@ Questions extends AppCompatActivity {
                     OP_4.setText(questionArray.get(questionCount).getOptions().get(3));
                     if (question_type.equals(2)) {
                         explanation_ques_image.setVisibility(View.VISIBLE);
-                        Explanationques.setVisibility(View.GONE);
+                        Explanationques.setVisibility(View.VISIBLE);
+                        Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                         linearlayout_audio.setVisibility(View.GONE);
                         Glide.with(mContext)
                                 .load(questionArray.get(questionCount).getQuestion())
@@ -898,7 +887,7 @@ Questions extends AppCompatActivity {
                     } else if (question_type.equals(3)) {
                         linearlayout_audio.setVisibility(View.VISIBLE);
                         Explanationques.setVisibility(View.VISIBLE);
-                        Explanationques.setText(questionArray.get(questionCount).getQuestion());
+                        Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                         explanation_ques_image.setVisibility(View.GONE);
 
                         if (mediaplayer.isPlaying()) {
@@ -2161,7 +2150,7 @@ Questions extends AppCompatActivity {
                 }
             });
             mediaplayer.prepare();
-            duration_time_audio.setText(milliseconds(mediaplayer.getDuration()));
+            duration_time_audio.setText("/"+milliseconds(mediaplayer.getDuration()));
 
         } catch (Exception exception) {
             Toast.makeText(this, "Exception" + exception.getMessage(), Toast.LENGTH_SHORT).show();
