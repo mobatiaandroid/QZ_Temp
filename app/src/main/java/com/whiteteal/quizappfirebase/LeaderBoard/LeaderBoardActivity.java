@@ -287,7 +287,10 @@ public class LeaderBoardActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        TotalStar.setText(totalStar);
+                                        TotalStar.setText(AppPreferenceManager.getStudentStar(mContext));
+                                        TotalScore.setText(AppPreferenceManager.getTotalScore(mContext));
+                                        starCount.setText(AppPreferenceManager.getStudentStar(mContext));
+                                        scorecount.setText(AppPreferenceManager.getTotalScore(mContext));
                                         Name.setText(AppPreferenceManager.getStudentName(mContext));
                                         star.setVisibility(View.VISIBLE);
                                         AppUtilityMethod.showDialogAlertDismiss((Activity) mContext,getString(R.string.no_datafound));
