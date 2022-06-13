@@ -104,7 +104,7 @@ public class FinalResult extends AppCompatActivity {
 
         OutOfScore.setText("Your Score is "+TotalScore+" out of "+QuesSize);
         EmojiScore.setText(TotalScore);
-        AppPreferenceManager.setTotalScore(mContext,TotalScore);
+        //AppPreferenceManager.setTotalScore(mContext,TotalScore);
 
         CloseIcon.setOnClickListener(new View.OnClickListener() {
             @Override

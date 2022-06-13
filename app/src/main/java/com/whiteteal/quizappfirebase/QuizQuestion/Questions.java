@@ -211,8 +211,8 @@ Questions extends AppCompatActivity {
 
 
         media_player = new MediaPlayer();
-        mediaplayer=new MediaPlayer();
         seebbar.setMax(100);
+        mediaplayer=new MediaPlayer();
         seekbar_audio.setMax(100);
         StarCount = findViewById(R.id.starCount);
         StarCount.setText(AppPreferenceManager.getStudentStar(mContext));
@@ -737,7 +737,6 @@ Questions extends AppCompatActivity {
                             .load(questionArray.get(questionCount).getQuestion())
                             .into(Question_Image);
                 } else if (question_type.equals(3)) {
-
                     linearlayout.setVisibility(View.VISIBLE);
                     Question.setVisibility(View.VISIBLE);
                     Question.setText(questionArray.get(questionCount).getMedia_question());
@@ -746,17 +745,11 @@ Questions extends AppCompatActivity {
                     Intent svc = new Intent(mContext, BackgroundSoundService.class);
 
                     try {
-                        if (media_player.isPlaying()) {
-                            startService(svc);
-                            handler1.removeCallbacks(updater);
-                            media_player.pause();
-                            playbutton.setImageResource(R.drawable.play);
-                        } else {
+
                             stopService(svc);
                             media_player.start();
                             playbutton.setImageResource(R.drawable.pause_button);
                             updateseekbar();
-                        }
                         preparedmediaplayer(questionCount);
 
                     } catch (Exception e) {
@@ -1070,8 +1063,8 @@ Questions extends AppCompatActivity {
                                     } else {
                                         Got_star = "0";
                                     }
-
-
+                                     Integer got_marks=CorrectAnswers;
+                                    System.out.print("got_marks"+got_marks);
                                     if (String.valueOf(TotalScore).equals("10")) {
                                         ScoreValue = 1;
                                     } else {
@@ -1084,7 +1077,7 @@ Questions extends AppCompatActivity {
                                             "\"answer\": " + ANS + "," +
                                             "\"user_answer\": " + UANS + "," +
                                             "\"no_of_correct_answer\": " + CorrectAnswers + "," +
-                                            "\"got_star\": " + Got_star + "}";
+                                            "\"got_star\": " + Got_star +","+"\"got_marks\":"+got_marks+"}";
 
                                     Log.e("JSONSTIRN", JSONSTRING);
                                 }
@@ -1301,7 +1294,8 @@ Questions extends AppCompatActivity {
                                     } else {
                                         Got_star = "0";
                                     }
-
+                                    Integer got_marks=CorrectAnswers;
+                                    System.out.print("got_marks"+got_marks);
                                     if (String.valueOf(TotalScore).equals("10")) {
                                         ScoreValue = 1;
                                     } else {
@@ -1314,7 +1308,7 @@ Questions extends AppCompatActivity {
                                             "\"answer\": " + ANS + "," +
                                             "\"user_answer\": " + UANS + "," +
                                             "\"no_of_correct_answer\": " + CorrectAnswers + "," +
-                                            "\"got_star\": " + Got_star + "}";
+                                            "\"got_star\": " + Got_star + ","+"\"got_marks\":"+got_marks+"}";
 
                                     Log.d("JSONSTIRN", JSONSTRING);
                                 }
@@ -2119,16 +2113,8 @@ Questions extends AppCompatActivity {
         try {
             media_player.reset();
             media_player.setDataSource(questionArray.get(questionCount).getQuestion());
-            Log.e("audioplay", questionArray.get(questionCount).getQuestion());
-
-            media_player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                }
-
-            });
             media_player.prepare();
+            media_player.start();
             duration_time.setText("/"+milliseconds(media_player.getDuration()));
         } catch (Exception exception) {
             Toast.makeText(this, "failed for load" + exception.getMessage(), Toast.LENGTH_SHORT).show();

@@ -181,7 +181,7 @@ public class AppPreferenceManager {
         editor.commit();
 
     }
-    public static String getTotalScore(Context context) {
+   /* public static String getTotalScore(Context context) {
         String totalscore = "";
         SharedPreferences prefs = context.getSharedPreferences("ALGUBRA",
                 Context.MODE_PRIVATE);
@@ -196,7 +196,7 @@ public class AppPreferenceManager {
         editor.putString("totalscore", totalscore);
         editor.commit();
 
-    }
+    }*/
     public static String getPhno(Context context) {
         String Phno = "";
         SharedPreferences prefs = context.getSharedPreferences("ALGUBRA",

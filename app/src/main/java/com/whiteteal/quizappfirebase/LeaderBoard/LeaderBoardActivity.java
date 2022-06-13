@@ -207,41 +207,28 @@ public class LeaderBoardActivity extends AppCompatActivity {
                             totalStar = secobj.optString("total_stars");
                             total_marks=secobj.optString("total_marks");
                             System.out.println("TotalStars"+totalStar);
-                            /*AppPreferenceManager.setStudentStar(mContext,totalStar);*/
+                            AppPreferenceManager.setStudentStar(mContext,totalStar);
                             final JSONArray jsonArray = secobj.getJSONArray(JTAG_LEADERBOARD);
                             if (jsonArray.length()>0){
                                 for (int i =0;i<jsonArray.length();i++){
 //                                Log.d("ResponseValue: INSIDE","INSIDE");
                                     System.out.println("DATATA"+jsonArray.get(i));
                                     JSONObject JOB = jsonArray.getJSONObject(i);
-
-                                    /*model.setName(JOB.optString("name"));
+                                    LeaderModel model = new LeaderModel();
+                                    model.setName(JOB.optString("name"));
                                     model.setScore(JOB.optString("total_stars"));
-                                    model.setTotalScore(JOB.optString("total_mark"));*/
-                                    String name  = JOB.optString("name");
-                                    String total_qz_played  = JOB.optString("total_qz_played");
-                                    String total_stars  = JOB.optString("total_stars");
-                                    String total_mark  = JOB.optString("total_mark");
-                                    System.out.println("totalscore"+total_mark);
-                                    System.out.println("totalstar"+total_stars);
-                                    AppPreferenceManager.setStudentStar(mContext,total_stars);
-                                    LeaderModel model = new LeaderModel(name,total_qz_played,total_stars,total_mark);
+                                    model.setTotal_score(JOB.optString("total_mark"));
                                     movieList.add(model);
-                                   /*Log.e("gfhjg",model.getTotalScore()) ;*/
-                                   /*for (int j=0;j>movieList.size();j++)
-                                   {
-                                       Log.e("Total_Score",movieList.get(j).getTotalScore());
-                                       AppPreferenceManager.setTotalScore(mContext, movieList.get(j).getTotalScore());
-                                   }*/
+
 
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run()
                                         {
-                                            TotalStar.setText(AppPreferenceManager.getStudentStar(mContext));
-                                            TotalScore.setText(AppPreferenceManager.getTotalScore(mContext));
-                                            starCount.setText(AppPreferenceManager.getStudentStar(mContext));
-                                            scorecount.setText(AppPreferenceManager.getTotalScore(mContext));
+                                            TotalStar.setText(totalStar);
+                                            TotalScore.setText(total_marks);
+                                            starCount.setText(totalStar);
+                                            scorecount.setText(total_marks);
                                             Name.setText(AppPreferenceManager.getStudentName(mContext));
                                             star.setVisibility(View.VISIBLE);
                                             Log.e("movielist", String.valueOf(movieList.size()));
@@ -287,10 +274,10 @@ public class LeaderBoardActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        TotalStar.setText(AppPreferenceManager.getStudentStar(mContext));
-                                        TotalScore.setText(AppPreferenceManager.getTotalScore(mContext));
-                                        starCount.setText(AppPreferenceManager.getStudentStar(mContext));
-                                        scorecount.setText(AppPreferenceManager.getTotalScore(mContext));
+                                        TotalStar.setText(totalStar);
+                                        TotalScore.setText(total_marks);
+                                        starCount.setText(totalStar);
+                                        scorecount.setText(total_marks);
                                         Name.setText(AppPreferenceManager.getStudentName(mContext));
                                         star.setVisibility(View.VISIBLE);
                                         AppUtilityMethod.showDialogAlertDismiss((Activity) mContext,getString(R.string.no_datafound));
