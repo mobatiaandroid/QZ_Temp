@@ -249,12 +249,12 @@ public class MainActivity extends AppCompatActivity {
         RemoveUserAnswers();
 //        RemoveUser();
 
-        StartQuizBtn.setOnClickListener(new View.OnClickListener() {
+        /*StartQuizBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-               /* Intent intent = new Intent(MainActivity.this, Questions.class);
-                startActivity(intent);*/
+               *//* Intent intent = new Intent(MainActivity.this, Questions.class);
+                startActivity(intent);*//*
                 counterVideo.setVisibility(View.VISIBLE);
                 Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.countdown_video);
                 counterVideo.setVideoURI(video);
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+*/
 
     }
 

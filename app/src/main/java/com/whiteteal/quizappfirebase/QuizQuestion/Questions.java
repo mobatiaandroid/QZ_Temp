@@ -760,6 +760,7 @@ Questions extends AppCompatActivity {
                 } else {
                     Intent svc = new Intent(mContext, BackgroundSoundService.class);
                     startService(svc);
+                    linearlayout.setVisibility(View.GONE);
                     Question_Image.setVisibility(View.GONE);
                     Question.setVisibility(View.VISIBLE);
                     Question.setText(questionArray.get(questionCount).getQuestion());
@@ -797,7 +798,7 @@ Questions extends AppCompatActivity {
                                 playbutton_audio.setImageResource(R.drawable.play);
                             } else {
                                 mediaplayer.start();
-                                playbutton_audio.setImageResource(R.drawable.pause_button);
+                                playbutton_audio.setImageResource(R.drawable.play_button);
                                 updateseekbar_audio();
                             }
                             preparedmediaplayer_audio(questionCount);
@@ -811,6 +812,7 @@ Questions extends AppCompatActivity {
 
 
                     } else {
+                        linearlayout_audio.setVisibility(View.GONE);
                         explanation_ques_image.setVisibility(View.GONE);
                         Explanationques.setVisibility(View.VISIBLE);
                         Explanationques.setText(questionArray.get(questionCount).getQuestion());
@@ -848,11 +850,12 @@ Questions extends AppCompatActivity {
                             playbutton_audio.setImageResource(R.drawable.play);
                         } else {
                             mediaplayer.start();
-                            playbutton_audio.setImageResource(R.drawable.pause_button);
+                            playbutton_audio.setImageResource(R.drawable.play_button);
                             updateseekbar_audio();
                         }
                         preparedmediaplayer_audio(questionCount);
                     } else {
+                        linearlayout_audio.setVisibility(View.GONE);
                         explanation_ques_image.setVisibility(View.GONE);
                         Explanationques.setVisibility(View.VISIBLE);
                         Explanationques.setText(questionArray.get(questionCount).getQuestion());
@@ -882,18 +885,28 @@ Questions extends AppCompatActivity {
                         Explanationques.setVisibility(View.VISIBLE);
                         Explanationques.setText(questionArray.get(questionCount).getMedia_question());
                         explanation_ques_image.setVisibility(View.GONE);
-
+                        /*try {
+                            playbutton_audio.setImageResource(R.drawable.play);
+                            mediaplayer.stop();
+                            mediaplayer.release();
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(mContext, "Failed", Toast.LENGTH_SHORT).show();
+                        }*/
                         if (mediaplayer.isPlaying()) {
                             handler2.removeCallbacks(updater_audio);
                             mediaplayer.pause();
                             playbutton_audio.setImageResource(R.drawable.play);
                         } else {
                             mediaplayer.start();
-                            playbutton_audio.setImageResource(R.drawable.pause_button);
+                            playbutton_audio.setImageResource(R.drawable.play_button);
                             updateseekbar_audio();
                         }
                         preparedmediaplayer_audio(questionCount);
+                        /**/
                     } else {
+                        linearlayout_audio.setVisibility(View.GONE);
                         explanation_ques_image.setVisibility(View.GONE);
                         Explanationques.setVisibility(View.VISIBLE);
                         Explanationques.setText(questionArray.get(questionCount).getQuestion());
@@ -2113,8 +2126,16 @@ Questions extends AppCompatActivity {
         try {
             media_player.reset();
             media_player.setDataSource(questionArray.get(questionCount).getQuestion());
+            Log.e("audioplay", questionArray.get(questionCount).getQuestion());
+
+            media_player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+
+            });
             media_player.prepare();
-            media_player.start();
             duration_time.setText("/"+milliseconds(media_player.getDuration()));
         } catch (Exception exception) {
             Toast.makeText(this, "failed for load" + exception.getMessage(), Toast.LENGTH_SHORT).show();
