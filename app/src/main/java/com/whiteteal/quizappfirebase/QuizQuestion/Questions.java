@@ -2136,27 +2136,7 @@ Questions extends AppCompatActivity {
 
     }
 
-    private void preparedmediaplayer_audio(int questionCount) {
-        /* Toast.makeText(this, "successs", Toast.LENGTH_SHORT).show();*/
 
-        try {
-            mediaplayer.reset();
-            mediaplayer.setDataSource(questionArray.get(questionCount).getQuestion());
-            Log.e("audioplay1", questionArray.get(questionCount).getQuestion());
-            mediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) { mp.start();
-                }
-            });
-            mediaplayer.prepare();
-            duration_time_audio.setText("/"+milliseconds(mediaplayer.getDuration()));
-
-        } catch (Exception exception) {
-            Toast.makeText(this, "Exception" + exception.getMessage(), Toast.LENGTH_SHORT).show();
-            System.out.println("Exception" + exception.getMessage());
-        }
-
-    }
 
     private Runnable updater = new Runnable() {
         @Override
