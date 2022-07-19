@@ -1,7 +1,6 @@
 package com.whiteteal.quizappfirebase.QuizQuestion;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -39,16 +38,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sasank.roundedhorizontalprogress.RoundedHorizontalProgressBar;
 import com.whiteteal.quizappfirebase.BackgroundService.BackgroundSoundService;
 import com.whiteteal.quizappfirebase.Common.FinalResult;
-import com.whiteteal.quizappfirebase.Common.LoginActivity;
 import com.whiteteal.quizappfirebase.MainActivity;
 import com.whiteteal.quizappfirebase.Manager.AppPreferenceManager;
 import com.whiteteal.quizappfirebase.Manager.AppUtilityMethod;
@@ -58,10 +54,8 @@ import com.whiteteal.quizappfirebase.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,7 +89,6 @@ import static com.whiteteal.quizappfirebase.URL_Constants.StausCodes.STATUSCODE_
 import static com.whiteteal.quizappfirebase.URL_Constants.StausCodes.STATUSCODE_MISSING_PARAMETER;
 import static com.whiteteal.quizappfirebase.URL_Constants.StausCodes.STATUSCODE_SUCCESS;
 import static com.whiteteal.quizappfirebase.URL_Constants.StausCodes.STATUS_CODE_NO_QUIZ;
-import static com.whiteteal.quizappfirebase.URL_Constants.URLConstant.URL_GET_QUIZ;
 import static com.whiteteal.quizappfirebase.URL_Constants.URLConstant.URL_SUBMIT_QUIZ;
 
 public class
@@ -113,7 +106,7 @@ Questions extends AppCompatActivity {
     TextView QuesCount;
     private SeekBar seebbar, seekbar_audio;
     private MediaPlayer mediaplayer;
-    private MediaPlayer media_player;
+    private MediaPlayer mediaPlayer1;
     private Handler handler1 = new Handler();
     private Handler handler2 = new Handler();
     CountDownTimer cTimer = null;
@@ -210,7 +203,7 @@ Questions extends AppCompatActivity {
         seekbar_audio = findViewById(R.id.seekbar_audio);
 
 
-        media_player = new MediaPlayer();
+        mediaPlayer1 = new MediaPlayer();
         seebbar.setMax(100);
         mediaplayer=new MediaPlayer();
         seekbar_audio.setMax(100);
@@ -456,18 +449,19 @@ Questions extends AppCompatActivity {
                                         Question_Image.setVisibility(View.GONE);
 
                                         Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                                        if (media_player.isPlaying()) {
+
+                                        if (mediaPlayer1.isPlaying()) {
                                             startService(svc);
                                             handler1.removeCallbacks(updater);
-                                            media_player.pause();
+                                            mediaPlayer1.pause();
                                             playbutton.setImageResource(R.drawable.play);
                                         } else {
                                             stopService(svc);
-                                            media_player.start();
+                                            mediaPlayer1.start();
                                             playbutton.setImageResource(R.drawable.pause_button);
                                             updateseekbar();
                                         }
-                                        preparedmediaplayer(questionCount);
+                                        setUpMediaPlayer(questionCount);
 
                                     } else {
                                         Question_Image.setVisibility(View.GONE);
@@ -511,7 +505,7 @@ Questions extends AppCompatActivity {
                                                 playbutton_audio.setImageResource(R.drawable.pause_button);
                                                 updateseekbar_audio();
                                             }
-                                            preparedmediaplayer_audio(questionCount);
+                                            setUpMediaPlayer(questionCount);
 
                                         } else {
                                             explanation_ques_image.setVisibility(View.GONE);
@@ -555,7 +549,7 @@ Questions extends AppCompatActivity {
                                                 playbutton_audio.setImageResource(R.drawable.pause_button);
                                                 updateseekbar_audio();
                                             }
-                                            preparedmediaplayer_audio(questionCount);
+                                            setUpMediaPlayer(questionCount);
 
                                         } else {
                                             explanation_ques_image.setVisibility(View.GONE);
@@ -601,7 +595,7 @@ Questions extends AppCompatActivity {
                                                 playbutton_audio.setImageResource(R.drawable.pause_button);
                                                 updateseekbar_audio();
                                             }
-                                            preparedmediaplayer_audio(questionCount);
+                                            setUpMediaPlayer(questionCount);
 
                                         } else {
                                             explanation_ques_image.setVisibility(View.GONE);
@@ -747,10 +741,10 @@ Questions extends AppCompatActivity {
                     try {
 
                             stopService(svc);
-                            media_player.start();
+                            mediaPlayer1.start();
                             playbutton.setImageResource(R.drawable.pause_button);
                             updateseekbar();
-                        preparedmediaplayer(questionCount);
+                        setUpMediaPlayer(questionCount);
 
                     } catch (Exception e) {
 
@@ -801,7 +795,7 @@ Questions extends AppCompatActivity {
                                 playbutton_audio.setImageResource(R.drawable.play_button);
                                 updateseekbar_audio();
                             }
-                            preparedmediaplayer_audio(questionCount);
+                            setUpMediaPlayer(questionCount);
 
                         }
                         catch (Exception e)
@@ -853,7 +847,7 @@ Questions extends AppCompatActivity {
                             playbutton_audio.setImageResource(R.drawable.play_button);
                             updateseekbar_audio();
                         }
-                        preparedmediaplayer_audio(questionCount);
+                        setUpMediaPlayer(questionCount);
                     } else {
                         linearlayout_audio.setVisibility(View.GONE);
                         explanation_ques_image.setVisibility(View.GONE);
@@ -903,7 +897,7 @@ Questions extends AppCompatActivity {
                             playbutton_audio.setImageResource(R.drawable.play_button);
                             updateseekbar_audio();
                         }
-                        preparedmediaplayer_audio(questionCount);
+                        setUpMediaPlayer(questionCount);
                         /**/
                     } else {
                         linearlayout_audio.setVisibility(View.GONE);
@@ -2121,24 +2115,22 @@ Questions extends AppCompatActivity {
         });
     }
 
-    private void preparedmediaplayer(int questionCount) {
-        /* Toast.makeText(this, "successs", Toast.LENGTH_SHORT).show();*/
-        try {
-            media_player.reset();
-            media_player.setDataSource(questionArray.get(questionCount).getQuestion());
-            Log.e("audioplay", questionArray.get(questionCount).getQuestion());
+    private void setUpMediaPlayer(int questionCount) {
 
-            media_player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        try {
+            mediaPlayer1.reset();
+            mediaPlayer1.setDataSource(questionArray.get(questionCount).getQuestion());
+            mediaPlayer1.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.start();
                 }
 
             });
-            media_player.prepare();
-            duration_time.setText("/"+milliseconds(media_player.getDuration()));
+            mediaPlayer1.prepare();
+            duration_time.setText("/"+milliseconds(mediaPlayer1.getDuration()));
         } catch (Exception exception) {
-            Toast.makeText(this, "failed for load" + exception.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "failed to load audio" + exception.getMessage(), Toast.LENGTH_SHORT).show();
             System.out.println("failed for load" + exception.getMessage());
         }
 
@@ -2170,7 +2162,7 @@ Questions extends AppCompatActivity {
         @Override
         public void run() {
             updateseekbar();
-            long currentduration = media_player.getCurrentPosition();
+            long currentduration = mediaPlayer1.getCurrentPosition();
             textcurrent_time.setText(milliseconds(currentduration));
 
         }
@@ -2187,10 +2179,10 @@ Questions extends AppCompatActivity {
 
     private void updateseekbar() {
 
-        if (media_player.isPlaying()) {
+        if (mediaPlayer1.isPlaying()) {
             /* Toast.makeText(this, "successs", Toast.LENGTH_SHORT).show();*/
 
-            seebbar.setProgress((int) (((float) media_player.getCurrentPosition() / media_player.getDuration() * 100)));
+            seebbar.setProgress((int) (((float) mediaPlayer1.getCurrentPosition() / mediaPlayer1.getDuration() * 100)));
             handler1.postDelayed(updater, 1000);
         }
     }
@@ -2255,4 +2247,49 @@ Questions extends AppCompatActivity {
         }
 
     }*/
+//    private void playAudio() {
+//    try{
+//
+//        File cacheDir=new File(android.os.Environment.getExternalStorageDirectory(),"QZ");
+//        if(!cacheDir.exists())
+//            cacheDir.mkdirs();
+//
+//        File f=new File(cacheDir,songname+".mp3");
+//        URL url = new URL(yoururl);
+//
+//        InputStream input = new BufferedInputStream(url.openStream());
+//        OutputStream output = new FileOutputStream(f);
+//
+//        byte data[] = new byte[1024];
+//        long total = 0;
+//        int count=0;
+//        while ((count = input.read(data)) != -1) {
+//            total++;
+//            Log.e("while","A"+total);
+//
+//            output.write(data, 0, count);
+//        }
+//
+//        output.flush();
+//        output.close();
+//        input.close();
+//    }
+//    Catch(Exception e){e.printStackTrace();}
+//
+//        String audioUrl = "http://qz.mobatia.com:8081/quiz/questions/MQ~~";
+//        mediaPlayer = new MediaPlayer();
+//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//
+//
+//        try {
+//            mediaPlayer.setDataSource(audioUrl);
+//
+//            mediaPlayer.prepare();
+//            mediaPlayer.start();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
+//    }
 }

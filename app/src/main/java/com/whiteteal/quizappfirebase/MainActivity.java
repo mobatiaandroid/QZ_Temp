@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
     String VerificationEvent = "normal";
     Dialog dialog;
     String version;
+//    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
