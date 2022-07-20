@@ -721,8 +721,7 @@ Questions extends AppCompatActivity {
                 Integer question_type = Integer.valueOf(questionArray.get(questionCount).getQuestionType());
                 System.out.println("question_type" + question_type);
                 if (question_type.equals(2)) {
-                    Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                    startService(svc);
+
                     Question_Image.setVisibility(View.VISIBLE);
                     Question.setVisibility(View.VISIBLE);
                     Question.setText(questionArray.get(questionCount).getMedia_question());
@@ -735,11 +734,9 @@ Questions extends AppCompatActivity {
                     Question.setVisibility(View.VISIBLE);
                     Question.setText(questionArray.get(questionCount).getMedia_question());
                     Question_Image.setVisibility(View.GONE);
-
                     Intent svc = new Intent(mContext, BackgroundSoundService.class);
 
                     try {
-
                             stopService(svc);
                             mediaPlayer1.start();
                             playbutton.setImageResource(R.drawable.pause_button);
@@ -752,8 +749,7 @@ Questions extends AppCompatActivity {
 
 
                 } else {
-                    Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                    startService(svc);
+
                     linearlayout.setVisibility(View.GONE);
                     Question_Image.setVisibility(View.GONE);
                     Question.setVisibility(View.VISIBLE);
@@ -999,6 +995,11 @@ Questions extends AppCompatActivity {
                     System.out.println("Timer 15 Reached");
                     mediaPlayer = MediaPlayer.create(mContext, R.raw.countdown_isg);
                     mediaPlayer.start();
+                }
+                if(TimerTxt.getText().equals("0"))
+                {
+                    Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                    startService(svc);
                 }
             }
 
