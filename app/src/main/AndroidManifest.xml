@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.whiteteal.quizappfirebase">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.INTERNET" ></uses-permission>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" ></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" ></uses-permission>
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -18,7 +19,8 @@
         android:usesCleartextTraffic="true"
         android:resizeableActivity="false"
         tools:ignore="LockedOrientationActivity"
-        tools:targetApi="n">
+        tools:targetApi="n"
+        android:requestLegacyExternalStorage="true">
         <activity android:name=".LeaderBoard.LeaderBoardActivity"
             android:screenOrientation="portrait"/>
 

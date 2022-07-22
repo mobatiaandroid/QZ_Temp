@@ -458,4 +458,21 @@ public class AppPreferenceManager {
                 Context.MODE_PRIVATE);
         return prefs.getString("FirebaseUID", "");
     }
+
+    /********** Save QuizAudio *********/
+    public static void setAudio(Context context,String result)
+    {
+        SharedPreferences prefs = context.getSharedPreferences("ALGUBRA_QI",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("Save_Audio", result);
+        editor.commit();
+    }
+    public  static String getAudio(Context context)
+    {
+        SharedPreferences prefs = context.getSharedPreferences("ALGUBRA_QI",
+                Context.MODE_PRIVATE);
+        return prefs.getString("Save_Audio", "");
+
+    }
 }

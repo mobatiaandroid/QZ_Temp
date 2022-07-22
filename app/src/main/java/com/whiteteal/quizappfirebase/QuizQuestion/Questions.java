@@ -1,5 +1,8 @@
 package com.whiteteal.quizappfirebase.QuizQuestion;
 
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
+import static android.provider.MediaStore.MediaColumns.TITLE;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -7,14 +10,19 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -25,6 +33,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -56,7 +65,16 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,6 +123,7 @@ Questions extends AppCompatActivity {
     Activity activity;
     TextView QuesCount;
     private SeekBar seebbar, seekbar_audio;
+    private MediaPlayer mediaplayer2;
     private MediaPlayer mediaplayer;
     private MediaPlayer mediaPlayer1;
     private Handler handler1 = new Handler();
@@ -150,8 +169,8 @@ Questions extends AppCompatActivity {
         activity = this;
         android_id = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         DeviceName = Build.BRAND;
-        Intent svc = new Intent(mContext, BackgroundSoundService.class);
-      startService(svc);
+      /*  Intent svc = new Intent(mContext, BackgroundSoundService.class);
+      startService(svc);*/
         IniUi();
     }
 
@@ -202,10 +221,9 @@ Questions extends AppCompatActivity {
         duration_time_audio = findViewById(R.id.duration_time_audio);
         seekbar_audio = findViewById(R.id.seekbar_audio);
 
-
         mediaPlayer1 = new MediaPlayer();
         seebbar.setMax(100);
-        mediaplayer=new MediaPlayer();
+        mediaplayer = new MediaPlayer();
         seekbar_audio.setMax(100);
         StarCount = findViewById(R.id.starCount);
         StarCount.setText(AppPreferenceManager.getStudentStar(mContext));
@@ -431,8 +449,8 @@ Questions extends AppCompatActivity {
                                     Log.d("ResponseValue: SIZE", String.valueOf(questionArray.size()));
 
                                     Integer question_type = Integer.valueOf(questionArray.get(questionCount).getQuestionType());
-                                  /*  media_question=questionArray.get(questionCount).getMedia_question();*/
-                                    System.out.print("media_question"+questionArray.get(questionCount).getMedia_question());
+                                    /*  media_question=questionArray.get(questionCount).getMedia_question();*/
+                                    System.out.print("media_question" + questionArray.get(questionCount).getMedia_question());
                                     if (question_type.equals(2)) {
                                         Question_Image.setVisibility(View.VISIBLE);
                                         Question.setVisibility(View.VISIBLE);
@@ -443,25 +461,41 @@ Questions extends AppCompatActivity {
                                                 .into(Question_Image);
                                     } else if (question_type.equals(3)) {
 
+                                        String filename=questionArray.get(questionCount).getQuestion();
+                                        //Log.e("resultName",resultName);
+                                        // AppPreferenceManager.setAudio(mContext,questionArray.get(questionCount).getQuestion());
                                         linearlayout.setVisibility(View.VISIBLE);
                                         Question.setVisibility(View.VISIBLE);
                                         Question.setText(questionArray.get(questionCount).getMedia_question());
                                         Question_Image.setVisibility(View.GONE);
+                                        URL url = null;//Create Download URl
+                                        try {
+                                            url = new URL(filename);
+                                        } catch (MalformedURLException e) {
+                                            e.printStackTrace();
+                                        }
+                                        //Log.e("music",music);
+                                        File f = new File("" + url);
+                                        f.getName();
 
-                                        Intent svc = new Intent(mContext, BackgroundSoundService.class);
-
+                                        DownloadingTask task;
+                                        task = new DownloadingTask(questionArray.get(questionCount).getQuestion(), f.getName());
+                                        task.execute();
+                                        //playAd(questionCount);
+                                        //Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                                        //playAd();
                                         if (mediaPlayer1.isPlaying()) {
-                                            startService(svc);
+                                            //startService(svc);
                                             handler1.removeCallbacks(updater);
                                             mediaPlayer1.pause();
                                             playbutton.setImageResource(R.drawable.play);
                                         } else {
-                                            stopService(svc);
+                                            //stopService(svc);
                                             mediaPlayer1.start();
                                             playbutton.setImageResource(R.drawable.pause_button);
                                             updateseekbar();
                                         }
-                                        setUpMediaPlayer(questionCount);
+                                        setUpMediaPlayer(questionCount,f.getName());
 
                                     } else {
                                         Question_Image.setVisibility(View.GONE);
@@ -505,7 +539,7 @@ Questions extends AppCompatActivity {
                                                 playbutton_audio.setImageResource(R.drawable.pause_button);
                                                 updateseekbar_audio();
                                             }
-                                            setUpMediaPlayer(questionCount);
+                                            setUpMediaPlayer_audio(questionCount);
 
                                         } else {
                                             explanation_ques_image.setVisibility(View.GONE);
@@ -549,7 +583,7 @@ Questions extends AppCompatActivity {
                                                 playbutton_audio.setImageResource(R.drawable.pause_button);
                                                 updateseekbar_audio();
                                             }
-                                            setUpMediaPlayer(questionCount);
+                                            setUpMediaPlayer_audio(questionCount);
 
                                         } else {
                                             explanation_ques_image.setVisibility(View.GONE);
@@ -595,7 +629,7 @@ Questions extends AppCompatActivity {
                                                 playbutton_audio.setImageResource(R.drawable.pause_button);
                                                 updateseekbar_audio();
                                             }
-                                            setUpMediaPlayer(questionCount);
+                                            setUpMediaPlayer_audio(questionCount);
 
                                         } else {
                                             explanation_ques_image.setVisibility(View.GONE);
@@ -730,18 +764,32 @@ Questions extends AppCompatActivity {
                             .load(questionArray.get(questionCount).getQuestion())
                             .into(Question_Image);
                 } else if (question_type.equals(3)) {
+                    String filename=questionArray.get(questionCount).getQuestion();
                     linearlayout.setVisibility(View.VISIBLE);
                     Question.setVisibility(View.VISIBLE);
                     Question.setText(questionArray.get(questionCount).getMedia_question());
                     Question_Image.setVisibility(View.GONE);
-                    Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                   // Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                    URL url = null;//Create Download URl
+                    try {
+                        url = new URL(filename);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    //Log.e("music",music);
+                    File f = new File("" + url);
+                    f.getName();
+
+                    DownloadingTask task;
+                    task = new DownloadingTask(questionArray.get(questionCount).getQuestion(), f.getName());
+                    task.execute();
 
                     try {
-                            stopService(svc);
-                            mediaPlayer1.start();
-                            playbutton.setImageResource(R.drawable.pause_button);
-                            updateseekbar();
-                        setUpMediaPlayer(questionCount);
+                      //  stopService(svc);
+                        mediaPlayer1.start();
+                        playbutton.setImageResource(R.drawable.pause_button);
+                        updateseekbar();
+                       setUpMediaPlayer(questionCount,f.getName());
 
                     } catch (Exception e) {
 
@@ -791,14 +839,11 @@ Questions extends AppCompatActivity {
                                 playbutton_audio.setImageResource(R.drawable.play_button);
                                 updateseekbar_audio();
                             }
-                            setUpMediaPlayer(questionCount);
+                            setUpMediaPlayer_audio(questionCount);
+
+                        } catch (Exception e) {
 
                         }
-                        catch (Exception e)
-                        {
-
-                        }
-
 
 
                     } else {
@@ -843,7 +888,7 @@ Questions extends AppCompatActivity {
                             playbutton_audio.setImageResource(R.drawable.play_button);
                             updateseekbar_audio();
                         }
-                        setUpMediaPlayer(questionCount);
+                        setUpMediaPlayer_audio(questionCount);
                     } else {
                         linearlayout_audio.setVisibility(View.GONE);
                         explanation_ques_image.setVisibility(View.GONE);
@@ -893,7 +938,7 @@ Questions extends AppCompatActivity {
                             playbutton_audio.setImageResource(R.drawable.play_button);
                             updateseekbar_audio();
                         }
-                        setUpMediaPlayer(questionCount);
+                        setUpMediaPlayer_audio(questionCount);
                         /**/
                     } else {
                         linearlayout_audio.setVisibility(View.GONE);
@@ -996,10 +1041,9 @@ Questions extends AppCompatActivity {
                     mediaPlayer = MediaPlayer.create(mContext, R.raw.countdown_isg);
                     mediaPlayer.start();
                 }
-                if(TimerTxt.getText().equals("0"))
-                {
-                    Intent svc = new Intent(mContext, BackgroundSoundService.class);
-                    startService(svc);
+                if (TimerTxt.getText().equals("0")) {
+                   /* Intent svc = new Intent(mContext, BackgroundSoundService.class);
+                    startService(svc);*/
                 }
             }
 
@@ -1071,8 +1115,8 @@ Questions extends AppCompatActivity {
                                     } else {
                                         Got_star = "0";
                                     }
-                                     Integer got_marks=CorrectAnswers;
-                                    System.out.print("got_marks"+got_marks);
+                                    Integer got_marks = CorrectAnswers;
+                                    System.out.print("got_marks" + got_marks);
                                     if (String.valueOf(TotalScore).equals("10")) {
                                         ScoreValue = 1;
                                     } else {
@@ -1085,7 +1129,7 @@ Questions extends AppCompatActivity {
                                             "\"answer\": " + ANS + "," +
                                             "\"user_answer\": " + UANS + "," +
                                             "\"no_of_correct_answer\": " + CorrectAnswers + "," +
-                                            "\"got_star\": " + Got_star +","+"\"got_marks\":"+got_marks+"}";
+                                            "\"got_star\": " + Got_star + "," + "\"got_marks\":" + got_marks + "}";
 
                                     Log.e("JSONSTIRN", JSONSTRING);
                                 }
@@ -1302,8 +1346,8 @@ Questions extends AppCompatActivity {
                                     } else {
                                         Got_star = "0";
                                     }
-                                    Integer got_marks=CorrectAnswers;
-                                    System.out.print("got_marks"+got_marks);
+                                    Integer got_marks = CorrectAnswers;
+                                    System.out.print("got_marks" + got_marks);
                                     if (String.valueOf(TotalScore).equals("10")) {
                                         ScoreValue = 1;
                                     } else {
@@ -1316,7 +1360,7 @@ Questions extends AppCompatActivity {
                                             "\"answer\": " + ANS + "," +
                                             "\"user_answer\": " + UANS + "," +
                                             "\"no_of_correct_answer\": " + CorrectAnswers + "," +
-                                            "\"got_star\": " + Got_star + ","+"\"got_marks\":"+got_marks+"}";
+                                            "\"got_star\": " + Got_star + "," + "\"got_marks\":" + got_marks + "}";
 
                                     Log.d("JSONSTIRN", JSONSTRING);
                                 }
@@ -2013,11 +2057,11 @@ Questions extends AppCompatActivity {
 //                        CheckUserExist();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-            }
-        });
+                    }
+                });
     }
 
     @Override
@@ -2116,11 +2160,17 @@ Questions extends AppCompatActivity {
         });
     }
 
-    private void setUpMediaPlayer(int questionCount) {
-
+    private void setUpMediaPlayer(int questionCount,String file_name) {
+        File mydir = mContext.getDir("audioCheck", Context.MODE_PRIVATE); //Creating an internal dir;
+        String path = mydir + "/"  + file_name;
+        Log.e("FilePath",path);
         try {
             mediaPlayer1.reset();
-            mediaPlayer1.setDataSource(questionArray.get(questionCount).getQuestion());
+            //mediaPlayer1 = MediaPlayer.create(mContext, R.raw.countdown_isg);
+            //mediaPlayer1.setDataSource(AppPreferenceManager.getAudio(mContext));
+            // mediaPlayer1.setDataSource(questionArray.get(questionCount).getQuestion());
+            mediaPlayer1.setDataSource(path);
+            //Log.e("audioplay", questionArray.get(questionCount).getQuestion());
             mediaPlayer1.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -2129,15 +2179,43 @@ Questions extends AppCompatActivity {
 
             });
             mediaPlayer1.prepare();
-            duration_time.setText("/"+milliseconds(mediaPlayer1.getDuration()));
+            duration_time.setText("/" + milliseconds(mediaPlayer1.getDuration()));
+        } catch (Exception exception) {
+            Toast.makeText(this, "failed to load audio" + exception.getMessage(), Toast.LENGTH_SHORT).show();
+            System.out.println("failed for load" + exception.getMessage());
+        }
+        mediaPlayer1.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                //playbutton.setImageResource(R.drawable.ic_baseline_pause_circle_24);
+                // BgPlayTxt.setText("Play");
+            }
+        });
+    }
+
+    private void setUpMediaPlayer_audio(int questionCount) {
+
+        try {
+            mediaplayer.reset();
+            //mediaPlayer1 = MediaPlayer.create(mContext, R.raw.countdown_isg);
+            //mediaPlayer1.setDataSource(AppPreferenceManager.getAudio(mContext));
+            mediaplayer.setDataSource(questionArray.get(questionCount).getQuestion());
+            Log.e("audioplay", questionArray.get(questionCount).getQuestion());
+            mediaplayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+
+            });
+            mediaplayer.prepare();
+            duration_time_audio.setText("/" + milliseconds(mediaplayer.getDuration()));
         } catch (Exception exception) {
             Toast.makeText(this, "failed to load audio" + exception.getMessage(), Toast.LENGTH_SHORT).show();
             System.out.println("failed for load" + exception.getMessage());
         }
 
     }
-
-
 
     private Runnable updater = new Runnable() {
         @Override
@@ -2177,7 +2255,6 @@ Questions extends AppCompatActivity {
     }
 
 
-
     private String milliseconds(long milliscnd) {
         String timer = "";
         String secondString;
@@ -2195,7 +2272,6 @@ Questions extends AppCompatActivity {
         timer = timer + min + ":" + secondString;
         return timer;
     }
-
 
 
     /*private void startPlayer(int questionCount)
@@ -2228,49 +2304,239 @@ Questions extends AppCompatActivity {
         }
 
     }*/
-//    private void playAudio() {
-//    try{
-//
-//        File cacheDir=new File(android.os.Environment.getExternalStorageDirectory(),"QZ");
-//        if(!cacheDir.exists())
-//            cacheDir.mkdirs();
-//
-//        File f=new File(cacheDir,songname+".mp3");
-//        URL url = new URL(yoururl);
-//
-//        InputStream input = new BufferedInputStream(url.openStream());
-//        OutputStream output = new FileOutputStream(f);
-//
-//        byte data[] = new byte[1024];
-//        long total = 0;
-//        int count=0;
-//        while ((count = input.read(data)) != -1) {
-//            total++;
-//            Log.e("while","A"+total);
-//
-//            output.write(data, 0, count);
-//        }
-//
-//        output.flush();
-//        output.close();
-//        input.close();
-//    }
-//    Catch(Exception e){e.printStackTrace();}
-//
-//        String audioUrl = "http://qz.mobatia.com:8081/quiz/questions/MQ~~";
-//        mediaPlayer = new MediaPlayer();
-//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//
-//
-//        try {
-//            mediaPlayer.setDataSource(audioUrl);
-//
-//            mediaPlayer.prepare();
-//            mediaPlayer.start();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
-//    }
+   /* private void playAudio() {
+    try{
+
+        File cacheDir=new File(android.os.Environment.getExternalStorageDirectory(),"QZ");
+        if(!cacheDir.exists())
+           cacheDir.mkdirs();
+
+        File f=new File(cacheDir,songname+".mp3");
+        java.net.URL url = new URL(yoururl);
+
+        InputStream input = new BufferedInputStream(url.openStream());
+        OutputStream output = new FileOutputStream(f);
+
+       byte data[] = new byte[1024];
+       long total = 0;
+        int count=0;
+        while ((count = input.read(data)) != -1) {
+            total++;
+            Log.e("while","A"+total);
+
+           output.write(data, 0, count);
+        }
+
+        output.flush();
+        output.close();
+        input.close();
+    }
+    catch(Exception e){e.printStackTrace();}
+
+        String audioUrl = "http://qz.mobatia.com:8081/quiz/questions/MQ~~";
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+
+        try {
+            mediaPlayer.setDataSource(audioUrl);
+
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+       }
+       Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
+    }*/
+
+    private class DownloadingTask extends AsyncTask<Void, Integer, Void> {
+        private static final String TAG = "Download Task";
+        File outputFile = null;
+        int newProgress = 0;
+        long total = 0;
+        String music;
+        String resultName="";
+        ProgressBar downloadProgress;
+
+        public DownloadingTask(String music,String file) {
+
+            this.music=music;
+            this.resultName=file;
+        }
+
+        public void setProgressBar(ProgressBar bar) {
+            this.downloadProgress = bar;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("working 3333");
+
+                }
+            }, 3000); // (animationDuration, oldProgress, newProgress)
+            //Set Button Text when download started
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            try {
+                if (outputFile != null) {
+
+                    System.out.println("working 1111");
+                    //downloadProgress.setIndeterminate(false);
+                } else {
+                    //dwnldImg.setVisibility(View.VISIBLE);
+                    System.out.println("working 2222");//If download failed change button text
+                    //downloadProgress.setProgress(0);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //dwnldImg.setVisibility(View.VISIBLE);
+                            System.out.println("working 3333");
+                            // downloadProgress.setIndeterminate(false);
+                            // downloadProgress.setProgress(0);
+                            //Change button text again after 3sec
+                        }
+                    }, 1000);
+
+                    Log.e(TAG, "Download Failed");
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                //Change button text if exception occurs
+
+                //bgMusicImg.setAlpha(0.5f);
+                //downloadProgress.setProgress(0);
+                //downloadProgress.setIndeterminate(false);
+                System.out.println("working 4444");
+                // buttonText.setText(R.string.downloadFailed);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //bgMusicImg.setAlpha(0.5f);
+                        //downloadProgress.setProgress(0);
+                        // downloadProgress.setIndeterminate(false);
+                        System.out.println("working 5555");
+                        // buttonText.setEnabled(true);
+                        // buttonText.setText(R.string.downloadAgain);
+                    }
+                }, 3000);
+                Log.e(TAG, "Download Failed with Exception - " + e.getLocalizedMessage());
+
+            }
+
+
+            super.onPostExecute(result);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            if (this.downloadProgress != null) {
+                //downloadProgress.setIndeterminate(false);
+                //downloadProgress.setProgress(values[0]);
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+
+           /* if (music.indexOf(".") > 0)
+
+                music = music.substring(0, music.lastIndexOf("."));*/
+
+               // Log.e("dwnld",dwnld);
+
+            try {
+                URL url1 = new URL(music);//Create Download URl
+                Log.e("music",music);
+                Log.e("Filenmaegjwdfejhf",resultName);
+                HttpURLConnection c = (HttpURLConnection) url1.openConnection();//Open Url Connection
+                c.setRequestMethod("GET");//Set Request Method to "GET" since we are grtting data
+                c.connect();//connect the URL Connection
+
+                //If Connection response is not OK then show Logs
+                if (c.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    Log.e(TAG, "Server returned HTTP " + c.getResponseCode()
+                            + " " + c.getResponseMessage());
+
+                }
+                int fileLength = c.getContentLength();
+
+                File mydir = mContext.getDir("audioCheck", Context.MODE_PRIVATE); //Creating an internal dir;
+                if (!mydir.exists()) {
+                    mydir.mkdirs();
+                }
+                //Get File if SD card is present
+                //  apkStorage = new File( Environment.getExternalStorageDirectory().getAbsolutePath(),APP_DIR_NAME);
+
+                //If File is not present create directory
+                if (!mydir.exists()) {
+                    mydir.mkdir();
+                    Log.e(TAG, "Directory Created.");
+                }
+                else
+                {
+
+                }
+
+
+                outputFile = new File(mydir, resultName);//Create Output file in Main File
+                Log.e("MP3 Download rrr4",outputFile.toString());
+                //Create New File if not present
+                if (!outputFile.exists()) {
+                    outputFile.createNewFile();
+                    Log.e(TAG, "File Created");
+                }
+
+                FileOutputStream fos = new FileOutputStream(outputFile);//Get OutputStream for NewFile Location
+
+                InputStream is = c.getInputStream();//Get InputStream for connection
+
+                byte[] buffer = new byte[1024];//Set buffer type
+                int len1 = 0;//init length
+                while ((len1 = is.read(buffer)) != -1) {
+                    total += len1;
+                    if (fileLength > 0) // only if total length is known
+                        newProgress = ((int) (total * 100 / fileLength));
+                    //downloadProgress.setProgress(newProgress);
+                    //downloadProgress.setIndeterminate(false);
+
+                    fos.write(buffer, 0, len1);//Write new file
+                }
+
+                //Close all connection after doing task
+                fos.close();
+                is.close();
+
+            } catch (Exception e) {
+
+                //Read exception if something went wrong
+                e.printStackTrace();
+                //downloadProgress.setProgress(0);
+                outputFile = null;
+                Log.e(TAG, "Download Error Exception " + e.getMessage());
+            }
+
+            return null;
+        }
+    }
+    public static String removeExtension(String fileName) {
+        if (fileName.indexOf(".") > 0) {
+            return fileName.substring(0, fileName.lastIndexOf("."));
+
+        } else {
+            return fileName;
+        }
+    }
+
 }
+

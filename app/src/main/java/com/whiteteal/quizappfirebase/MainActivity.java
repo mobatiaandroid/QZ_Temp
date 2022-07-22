@@ -250,13 +250,13 @@ public class MainActivity extends AppCompatActivity {
         RemoveUserAnswers();
 //        RemoveUser();
 
-        /*StartQuizBtn.setOnClickListener(new View.OnClickListener() {
+        StartQuizBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-               *//* Intent intent = new Intent(MainActivity.this, Questions.class);
-                startActivity(intent);*//*
-                counterVideo.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(MainActivity.this, Questions.class);
+                startActivity(intent);
+                /*counterVideo.setVisibility(View.VISIBLE);
                 Uri video = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.countdown_video);
                 counterVideo.setVideoURI(video);
                 counterVideo.start();
@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onCompletion(MediaPlayer mp) {
                         startActivity(new Intent(mContext, Questions.class));
                     }
-                });
+                });*/
 
                 VerificationEvent = "logout";
                 Map<String, Object> user = new HashMap<>();
@@ -291,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-*/
 
     }
 
@@ -938,7 +937,9 @@ public class MainActivity extends AppCompatActivity {
                                         StartsIn.setVisibility(View.VISIBLE);
                                         TotalQues.setText("2. Totally, you have to answer " + questionsModels.size() + " questions");
                                         AppPreferenceManager.setTotalQuestion(mContext, "Totally you have " + questionsModels.size() + " Questions");
+
                                     }
+
                                 }
                             });
 
